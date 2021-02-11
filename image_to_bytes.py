@@ -1,19 +1,28 @@
 # Simple image to bytearray for python OLED programs
 #
-# Input a simple black and white image - image is reduced to 2 bit
+# Input a simple black and white image (RGB bitmap though!)- image is reduced to 2 bit
+#
+#
 
 
 
 
 from PIL import Image
 
-im = Image.open("img.bmp") # Can be many different formats.
+image = "Nose2_large.bmp"
+
+
+
+im = Image.open(image) # Can be many different formats.
 
 output_ascii_image = False
 
 
 
 pix = im.load()
+print ("File:")
+print (image) 
+print ("")
 print ("Image Dimensions:")
 print (im.size) 
 print ("")
@@ -30,11 +39,14 @@ else:
 
 
 if valid == True:
+    print ("")
     print ("bytearray for Python code:")
     print ("")
     byte = [0,0,0,0,0,0,0,0]
     b_value=0
-    bitstring = ""
+    bitstring = image[:-4].lower()
+    bitstring +=" = bytearray(b"
+    bitstring += "\""
     pixel_map = ""
     for y in range(im.height):
         pixel_map = ""
@@ -59,9 +71,13 @@ if valid == True:
             if len(temp_hex)==2:
                 temp_hex = temp_hex.replace("x","x0")
             bitstring +=temp_hex
+        # bitstring += " "
+        if y<im.height-1:
+            bitstring += "\\"
+            bitstring += "\n"
         if  output_ascii_image == True:   
             print(pixel_map)
-     
+    bitstring += "\")"
     print(bitstring)
 
 
